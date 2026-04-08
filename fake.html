@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Detector de Fake News</title>
+<style>
+body{font-family:Arial;background:#0f172a;color:#fff;text-align:center;padding:20px}
+textarea{width:80%;height:150px;border-radius:10px;padding:10px;font-size:16px}
+button{margin-top:10px;padding:10px 20px;font-size:16px;border:none;border-radius:8px;background:#22c55e;color:white;cursor:pointer}
+.result{margin-top:20px;font-size:20px;padding:15px;border-radius:10px}
+.verde{background:#166534}
+.amarelo{background:#a16207}
+.vermelho{background:#7f1d1d}
+</style>
+</head>
+<body>
+<h1>🧠 Detector de Fake News</h1>
+<p>Cole uma notícia ou texto abaixo:</p>
+<textarea id="texto"></textarea><br>
+<button onclick="analisar()">Analisar</button>
+<div id="resultado" class="result"></div>
+
+<script>
+function analisar(){
+  let texto = document.getElementById("texto").value;
+  let resultado = document.getElementById("resultado");
+
+  let score = 0;
+
+  // palavras suspeitas
+  const palavras = ["URGENTE","CHOCANTE","IMPERDÍVEL","VOCÊ NÃO VAI ACREDITAR","COMPARTILHE","ABSURDO"];
+
+  palavras.forEach(p => {
+    if(texto.toUpperCase().includes(p)) score += 2;
+  });
+
+  // muitas maiúsculas
+  let maiusculas = texto.replace(/[^A-Z]/g, "").length;
+  if(maiusculas > texto.length * 0.3) score += 2;
+
+  // texto muito curto
+  if(texto.length < 50) score += 1;
+
+  // decisão
+  if(score <= 1){
+    resultado.innerHTML = "✅ Provavelmente confiável";
+    resultado.className = "result verde";
+  }else if(score <= 3){
+    resultado.innerHTML = "⚠️ Suspeito - verifique a fonte";
+    resultado.className = "result amarelo";
+  }else{
+    resultado.innerHTML = "❌ Possível fake news";
+    resultado.className = "result vermelho";
+  }
+}
+</script>
+</body>
+</html>
